@@ -39,6 +39,11 @@ app.route('/hello.json').json({msg:'hello!'})
 
 app.route('/plaintext').text('I like text/plain')
 
+app.route(/\/(regex|awesome)/).text(function(req, resp) {
+  var regexOrAwesome = req.route.extras[0]  
+  res.end('I like ' + regexOrAwesome)
+})
+
 app.route('/')
   .html(function (req, resp) {
     request('http://me.iriscouch.com/db', {json:true}, function (e, r) {
