@@ -200,7 +200,19 @@ Templates.prototype.get = function (name, cb) {
   }
   
   function finish () {
-    if (name in self.names) {
+    if (!self.cache) {
+      fs.readdir(self.dir, function (e, files) {
+        files.forEach(function(filename) {
+          if (path.basename(filename) === name || path.basename(filename, path.extname(filename)) === name) {
+            fs.readFile(path.join(self.dir, name), function (e, data) {
+              var t = new self.Template(data.toString())
+              cb(null, t)
+            })
+          }
+        })
+      })
+    }
+    else if (name in self.names) {
       cb(null, self.files[self.names[name]])
     } else {
       cb(new Error("Cannot find template"))
@@ -212,10 +224,14 @@ Templates.prototype.get = function (name, cb) {
     self.once('loaded', finish)
   }
 }
-Templates.prototype.directory = function (dir) {
+Templates.prototype.directory = function (dir, cache) {
   var self = this
+  self.dir = dir
+  if (cache == undefined) cache = true
+  self.cache = cache
   this.loaded = false
   this.loading += 1
+
   loadfiles(dir, function (e, filemap) {
     if (e) return self.emit('error', e)
     for (i in filemap) {
