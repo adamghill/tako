@@ -101,7 +101,7 @@ var tako = require('tako')
   ;
 
 templates.directory(path.join(__dirname, 'templates'))
-// templates.directory(path.join(__dirname, 'templates', false)) // Prevent caching templates (for instance, on local development)
+// templates.directory(path.join(__dirname, 'templates', { cache: false })) // Prevent caching templates (for instance, on local development)
 
 app.route('/').html(function(req, res) {
   templates.get('index.html', function(err, t) {

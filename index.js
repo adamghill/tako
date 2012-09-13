@@ -223,11 +223,12 @@ Templates.prototype.get = function (name, cb) {
     self.once('loaded', finish)
   }
 }
-Templates.prototype.directory = function (dir, cache) {
+Templates.prototype.directory = function (dir, options) {
   var self = this
   self.dir = dir
-  if (cache == undefined) cache = true
-  self.cache = cache
+  if (!options) options = { cache: true } 
+  self.cache = options.cache
+  self.filter = options.filter
   this.loaded = false
   this.loading += 1
 
