@@ -199,20 +199,20 @@ Templates.prototype.get = function (name, cb) {
   }
   
   function finish () {
-    if (!self.cache) {
-      fs.readdir(self.dir, function (e, files) {
-        files.forEach(function(filename) {
-          if (path.basename(filename) === name || path.basename(filename, path.extname(filename)) === name) {
-            fs.readFile(path.join(self.dir, name), function (e, data) {
-              var t = new self.Template(data.toString())
-              cb(null, t)
-            })
+    if (name in self.names) {
+      if (self.cache) {
+        cb(null, self.files[self.names[name]])
+      }
+      else {
+        fs.readFile(self.names[name], function (e, data) {
+          if (e) { 
+            cb(e)
+          } else {
+            var t = new self.Template(data.toString())
+            cb(null, t)
           }
         })
-      })
-    }
-    else if (name in self.names) {
-      cb(null, self.files[self.names[name]])
+      }
     } else {
       cb(new Error("Cannot find template"))
     }
