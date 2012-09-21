@@ -93,6 +93,12 @@ function loadfiles (f, cb) {
   fs.readdir(f, function (e, files) {
     if (e) return cb(e)
     var counter = 0
+
+    var decrementCounter = function() {
+      counter -= 1
+      if (counter === 0) cb(null, filesmap)
+    }
+
     files.forEach(function (filename) {
       counter += 1
       fs.stat(path.join(f, filename), function (e, stat) {
@@ -102,15 +108,20 @@ function loadfiles (f, cb) {
             for (i in files) {
               filesmap[i] = files[i]
             }
-            counter -= 1
-            if (counter === 0) cb(null, filesmap)
+            
+            decrementCounter()
           })
         } else {
-          fs.readFile(path.join(f, filename), function (e, data) {
-            filesmap[path.join(f, filename)] = data.toString()
-            counter -= 1
-            if (counter === 0) cb(null, filesmap)
-          })
+          if (filename !== '.DS_Store') {
+            fs.readFile(path.join(f, filename), function (e, data) {
+              console.log('filename', filename)
+              filesmap[path.join(f, filename)] = data.toString()
+
+              decrementCounter()
+            })
+          } else {
+            decrementCounter()
+          }
         }
       })
     })
