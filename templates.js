@@ -69,13 +69,13 @@ Templates.prototype.get = function (name, cb) {
 Templates.prototype.directory = function (dir, options) {
   var self = this
   self.dir = dir
-  if (!options) options = { cache: true } 
-  self.cache = options.cache
-  self.filter = options.filter
+  if (!options) options = { cache: true, filter: /.*/ }
+  self.cache = options.cache || true
+  var filter = options.filter || /.*/
   this.loaded = false
   this.loading += 1
 
-  loadfiles(dir, function (e, filemap) {
+  loadfiles(dir, filter, function (e, filemap) {
     if (e) return self.emit('error', e)
     for (i in filemap) {
       self.files[i] = new self.Template(filemap[i])
@@ -88,9 +88,10 @@ Templates.prototype.directory = function (dir, options) {
   })
 } 
 
-function loadfiles (f, cb) {
+function loadfiles (dir, filter, cb) {
   var filesmap = {}
-  fs.readdir(f, function (e, files) {
+
+  fs.readdir(dir, function (e, files) {
     if (e) return cb(e)
     var counter = 0
 
@@ -101,9 +102,9 @@ function loadfiles (f, cb) {
 
     files.forEach(function (filename) {
       counter += 1
-      fs.stat(path.join(f, filename), function (e, stat) {
+      fs.stat(path.join(dir, filename), function (e, stat) {
         if (stat.isDirectory()) {
-          loadfiles(path.join(f, filename), function (e, files) {
+          loadfiles(path.join(dir, filename), function (e, files) {
             if (e) return cb(e)
             for (i in files) {
               filesmap[i] = files[i]
@@ -112,10 +113,9 @@ function loadfiles (f, cb) {
             decrementCounter()
           })
         } else {
-          if (filename !== '.DS_Store') {
-            fs.readFile(path.join(f, filename), function (e, data) {
-              console.log('filename', filename)
-              filesmap[path.join(f, filename)] = data.toString()
+          if (filename !== '.DS_Store' && filename.match(filter)) {
+            fs.readFile(path.join(dir, filename), function (e, data) {
+              filesmap[path.join(dir, filename)] = data.toString()
 
               decrementCounter()
             })
