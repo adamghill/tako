@@ -110,3 +110,10 @@ app.route('/').html(function(req, res) {
   })
 })
 ```
+
+Templating options
+
+```javascript
+templates.directory(path.join(__dirname, 'templates', { cache: false })) // Prevent caching templates (for instance, on local development); default is true
+templates.directory(path.join(__dirname, 'templates', { filter: /\.html/ })) // Regex that files from the template directory should match; default is /.*/
+```
