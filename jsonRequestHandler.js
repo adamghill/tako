@@ -18,7 +18,7 @@ function JSONRequestHandler (req, resp) {
   }
 
   if (req.method === "PUT" || req.method === "POST") {
-    if (req.headers['content-type'].split(';')[0] === 'application/json') {
+    if (req.headers['content-type'] && (req.headers['content-type'].split(';')[0] === 'application/json')) {
       req.on('body', function (body) {
         try {
           req.emit('json', JSON.parse(body));

@@ -97,10 +97,13 @@ function Route (path, application) {
 
     var keys = Object.keys(self.byContentType).concat(['*/*'])
     if (keys.length) {
+      var cc = false
+
       if (req.method !== 'PUT' && req.method !== 'POST') {
-        var cc = req.accept.apply(req, keys)
+        cc = req.accept.apply(req, keys)
       } else {
-        var cc = req.headers['content-type'].split(';')[0];
+        if(req.headers['content-type'])
+          cc = req.headers['content-type'].split(';')[0]
       }
 
       if (!cc) return returnEarly(req, resp, keys, authHandler)
