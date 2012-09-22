@@ -77,7 +77,7 @@ Templates.prototype.directory = function (dir, options) {
 
   loadfiles(dir, filter, function (e, filemap) {
     if (e) return self.emit('error', e)
-    for (i in filemap) {
+    for (var i in filemap) {
       self.files[i] = new self.Template(filemap[i])
       self.names[path.basename(i)] = i
       self.names[path.basename(i, path.extname(i))] = i
@@ -106,7 +106,7 @@ function loadfiles (dir, filter, cb) {
         if (stat.isDirectory()) {
           loadfiles(path.join(dir, filename), function (e, files) {
             if (e) return cb(e)
-            for (i in files) {
+            for (var i in files) {
               filesmap[i] = files[i]
             }
             

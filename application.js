@@ -34,8 +34,8 @@ function Application (options) {
       return self._ioEmitter.emit('request', req, resp)
     }
     
-    for (i in self.addHeaders) {
-      resp.setHeader(i, self.addHeaders[i])
+    for (var header in self.addHeaders) {
+      resp.setHeader(header, self.addHeaders[header])
     }
     
     req.accept = function () {
@@ -65,7 +65,7 @@ function Application (options) {
     // Get all the parsed url properties on the request
     // This is the same style express uses and it's quite nice
     var parsed = url.parse(req.url)
-    for (i in parsed) {
+    for (var i in parsed) {
       req[i] = parsed[i]
     }
     
@@ -270,13 +270,14 @@ Application.prototype.notfound = function (req, resp) {
   if (cc === '*/*') cc = 'text/plain'
   resp.statusCode = 404
   resp.setHeader('content-type', cc)
+  var body = 'Not Found'
+  
   if (cc === 'text/html') {
     body = '<html><body>Not Found</body></html>'
   } else if (cc === 'application/json') {
     body = JSON.stringify({status:404, reason:'not found', message:'not found'})
-  } else {
-    body = 'Not Found'
   }
+
   resp.end(body)
 }
 

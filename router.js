@@ -61,10 +61,10 @@ Router.prototype.close = function (cb) {
     self.httpsServer.close()
   }
   
-  for (i in self.hosts) {
+  for (var host in self.hosts) {
     counter++
     process.nextTick(function () {
-      self.hosts[i].close(end)
+      self.hosts[host].close(end)
     })
     
   }
