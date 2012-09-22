@@ -128,4 +128,4 @@ function loadfiles (dir, filter, cb) {
   })
 }
 
-exports.Templates = Templates
+module.exports = Templates
