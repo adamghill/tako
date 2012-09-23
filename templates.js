@@ -113,7 +113,7 @@ function loadfiles (dir, filter, cb) {
             decrementCounter()
           })
         } else {
-          if (filename !== '.DS_Store' && filename.match(filter)) {
+          if (filename.charAt(0) !== '.' && filename.match(filter)) {
             fs.readFile(path.join(dir, filename), function (e, data) {
               filesmap[path.join(dir, filename)] = data.toString()
 
