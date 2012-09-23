@@ -1,3 +1,5 @@
+// Currently unused.
+
 function ServiceError(msg) {
   Error.apply(this, arguments)
   this.message = msg 
