@@ -69,9 +69,13 @@ Templates.prototype.get = function (name, cb) {
 Templates.prototype.directory = function (dir, options) {
   var self = this
   self.dir = dir
+  
   if (!options) options = { cache: true, filter: /.*/ }
-  self.cache = options.cache || true
-  var filter = options.filter || /.*/
+  if (options.cache === undefined) options.cache = true
+  self.cache = options.cache
+  if (options.filter === undefined) options.filter = /.*/
+  var filter = options.filter
+
   this.loaded = false
   this.loading += 1
 
