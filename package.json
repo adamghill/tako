@@ -1,7 +1,7 @@
 { "name" : "tako"
 , "description" : "Functional web framework."
 , "tags" : ["http", "simple", "util", "utility", "web", "framework", "webframework"]
-, "version" : "0.3.3"
+, "version" : "0.3.4"
 , "author" : "Mikeal Rogers <mikeal.rogers@gmail.com>"
 , "contributors" : [
   {

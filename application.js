@@ -5,6 +5,8 @@ var util = require('util')
   , url = require('url')
   , fs = require('fs')
   , mapleTree = require('mapleTree')
+  , Cookies = require('cookies')
+  , Keygrip = require('keygrip')
   , Templates = require('./templates')
   , JSONRequestHandler = require('./jsonRequestHandler')
   , Route = require('./route')
@@ -25,6 +27,10 @@ function Application (options) {
   self.addHeaders = {}
   if (self.options.logger) {
     self.logger = self.options.logger
+  }
+
+  if (options.keys) {
+    self.keygrip = new Keygrip(options.keys)
   }
 
   self.router = new mapleTree.RouteTree()
@@ -102,6 +108,8 @@ Application.prototype.onRequest = function (req, resp) {
   for (var header in self.addHeaders) {
     resp.setHeader(header, self.addHeaders[header])
   }
+
+  req.cookies = resp.cookies = new Cookies(req, resp, self.keygrip)
   
   req.accept = function () {
     if (!req.headers.accept) return '*/*'
